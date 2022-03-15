@@ -10,11 +10,20 @@ typedef struct {
 	char id_materia[5];		//Identificador de la materia (Id_materia), 4 dígitos (debe coincidir con el Id_materia de alguna materia del fichero Materias.txt)
 	char grupo[11];			//Grupo (Grupo) al que imparte clase, 10 caracteres máximo (debe coincidir con algún grupo de los que aparecen en el fichero Alumnos.txt).
 	
-}Horario;
+}tipo_Horario;
 
-//Cabecera: void volcarHorarios()
+tipo_Horario *vHorarios;
+int nHorarios;
+
+//Cabecera: void cargarHorarios(tipo_Horario **, int *);
+//Precondicion: Como parámetros un vector tipo horario y un entero por referencia.
 //Postcondicion: Vuelca la informacion del fichero Horarios.txt a estructuras del programa
-void volcarHorarios();
+void cargarHorarios(tipo_Horario **, int *);
+
+//Cabecera: void listarHorarios (tipo_Horario *, int);
+//Precondicion: Vector de tipo horario declarado y entero
+//Postcondicion: Muestra por pantalla al usuario la lista de horarios
+void listarHorarios (tipo_Horario *, int);
 
 //Cabecera: void annadirHoras()
 //Postcondicion: Añade horas al horario de un profesor
