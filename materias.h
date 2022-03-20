@@ -1,26 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #ifndef MATERIAS_H_
 #define MATERIAS_H_
 
 typedef struct
 {
-	int Id_materia;
-	char Nombre_materia[51];
-	char Abrev_materia [4];
-}Materia;
+	char  id_materia [5];
+	char nombre_materia[51];
+	char abrev_materia [4];
+}materia;
 
-//Postcondici髇:Crea un conjunto de estructuras alumno a partir del fichero
-void volcar_entrada_mat();
-//Postcondici髇: A馻de la materia con los valores recibidos de la entrada estandar
-void dar_alta_mat();
-//Precondici髇: Recibe la Id de la materia a borrar
-//Postcondici髇: Elimina los datos correspondientes a dicha materia
-void dar_baja_mat(int);
-//Precondici髇: Recibe la Id de la materia a modificar
-//Postcondici髇: Modifica los datos correspondientes a dicha materia
-void modif_mat(int);
+
+materia * v_materias; //Puntero que se帽ala el comienzo de un vector dinamico del tipo alumno
+int n_materias; //Numero de materias impartidas (Encontradas en el fichero Materias.txt
+
+//Postcondici贸n:Crea un conjunto de estructuras alumno a partir del fichero
+void volcado_entrada_mat(materia **, int*);
+//Postcondici贸n: A帽ade la materia con los valores recibidos de la entrada estandar
+void dar_alta_mat(materia*,int, char []);
+//Precondici贸n: Recibe la Id de la materia a borrar
+//Postcondici贸n: Elimina los datos correspondientes a dicha materia
+void dar_baja_mat(materia*, int , char []);
+//Precondici贸n: Recibe la Id de la materia a modificar
+//Postcondici贸n: Modifica los datos correspondientes a dicha materia
+void modif_mat(materia*, int , char[]);
 //Postcondicion: Muestra los nombres completos de los alumnos dados de alta
-void listar_mat();
-//Postcondici髇: Sobreescribe el fichero con los datos correspondientes al as estruccturas del programa
-void volcar_fichero_mat();
+void listar_mat(materia*, int);
+//Postcondici贸n: Sobreescribe el fichero con los datos correspondientes al as estruccturas del programa
+void volcar_fichero_mat(materia*);
 
 #endif
