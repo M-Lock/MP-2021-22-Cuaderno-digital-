@@ -1,14 +1,14 @@
-//Declaraciones módulo Horarios.
+//Declaraciones mï¿½dulo Horarios.
 
 #ifndef _HORARIOS_H_
 #define _HORARIOS_H_
 
 typedef struct {
-	char id_prof[4];		//Identificador del profesor (Id_profesor), tres dígitos (debe coincidir con un identificador deusuario, Id_usuario, con perfil profesor del fichero Usuarios.txt).
-	int dia_clase;			//Día (Día_clase), valor numérico de 1 a 5 que indica el día de la semana que imparte clase de la materia el profesor.
-	int hora_clase;			//Hora (Hora_clase), valor numérico de 1 a 6 que indica el tramo horario en el que imparte clase de la materia el profesor.
-	char id_materia[5];		//Identificador de la materia (Id_materia), 4 dígitos (debe coincidir con el Id_materia de alguna materia del fichero Materias.txt)
-	char grupo[11];			//Grupo (Grupo) al que imparte clase, 10 caracteres máximo (debe coincidir con algún grupo de los que aparecen en el fichero Alumnos.txt).
+	char id_prof[4];		//Identificador del profesor (Id_profesor), tres dï¿½gitos (debe coincidir con un identificador deusuario, Id_usuario, con perfil profesor del fichero Usuarios.txt).
+	int dia_clase;			//Dï¿½a (Dï¿½a_clase), valor numï¿½rico de 1 a 5 que indica el dï¿½a de la semana que imparte clase de la materia el profesor.
+	int hora_clase;			//Hora (Hora_clase), valor numï¿½rico de 1 a 6 que indica el tramo horario en el que imparte clase de la materia el profesor.
+	char id_materia[5];		//Identificador de la materia (Id_materia), 4 dï¿½gitos (debe coincidir con el Id_materia de alguna materia del fichero Materias.txt)
+	char grupo[11];			//Grupo (Grupo) al que imparte clase, 10 caracteres mï¿½ximo (debe coincidir con algï¿½n grupo de los que aparecen en el fichero Alumnos.txt).
 	
 }tipo_Horario;
 
@@ -16,9 +16,14 @@ tipo_Horario *vHorarios;
 int nHorarios;
 
 //Cabecera: void cargarHorarios(tipo_Horario **, int *);
-//Precondicion: Como parámetros un vector tipo horario y un entero por referencia.
+//Precondicion: Como parï¿½metros un vector tipo horario y un entero por referencia.
 //Postcondicion: Vuelca la informacion del fichero Horarios.txt a estructuras del programa
 void cargarHorarios(tipo_Horario **, int *);
+
+//Cabecera: void volcarHorarios(tipo_Horario *vHorarios, size_t tam);
+//Precondicion: Recibe un vector de horarios igual o modificado y el numero de horarios
+//Postcondicion: Vuelca en el fichero Horarios.txt las nuevas modificaciones en los horarios
+void volcarHorarios(tipo_Horario *vHorarios, size_t tam);
 
 //Cabecera: void listarHorarios (tipo_Horario *, int);
 //Precondicion: Vector de tipo horario declarado y entero
@@ -26,7 +31,7 @@ void cargarHorarios(tipo_Horario **, int *);
 void listarHorarios (tipo_Horario *, int);
 
 //Cabecera: void annadirHoras()
-//Postcondicion: Añade horas al horario de un profesor
+//Postcondicion: Aï¿½ade horas al horario de un profesor
 void annadirHoras();
 
 //Cabecera: void eliminarHoras()
