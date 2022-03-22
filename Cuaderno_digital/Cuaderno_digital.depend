@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1647361335 source:c:\users\usuario\desktop\mp\año 2\cuaderno_digital\main.c
+1647964568 source:c:\users\usuario\desktop\mp\año 2\cuaderno_digital\main.c
 	"menus.h"
 	<stdio.h>
 	"calificaciones_matriculas.h"
@@ -7,7 +7,7 @@
 1647592643 source:c:\users\usuario\desktop\mp\año 2\cuaderno_digital\menus.c
 	<stdio.h>
 
-1647642393 source:c:\users\usuario\desktop\mp\año 2\cuaderno_digital\calificaciones_matriculas.c
+1647966478 source:c:\users\usuario\desktop\mp\año 2\cuaderno_digital\calificaciones_matriculas.c
 	"calificaciones_matriculas.h"
 	<stdio.h>
 	<stdlib.h>

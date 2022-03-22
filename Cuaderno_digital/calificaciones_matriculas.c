@@ -6,6 +6,10 @@ int cal_linias_Matriculas();
 int cal_linias_Calificaiones();
 int comparar(char*,char*,int);
 void copiar_cad(char[],char[],int);
+void adelantar_Matriculas(int);
+void adelantar_Calificaciones(int);
+int longitud_cadena(char*);
+void vaciar_cadena(char*);
 
 //Cabezera: void introducir_Matriculas()
 //Precondición: Las estructuras han de estar definidas
@@ -46,6 +50,8 @@ void introducir_Matriculas(){
             }
         }
     }
+    printf("%s-%s\n",matri[0].Id_alum,matri[0].Id_materia);
+    printf("%s-%s\n",matri[1].Id_alum,matri[1].Id_materia);
     fclose(Matricula);
 }
 
@@ -139,6 +145,7 @@ if(Matricula==NULL){
 else{
     while(i<num_lin_Matriculas.lon){
         fprintf(Matricula,"%s-%s\n",matri[i].Id_materia,matri[i].Id_alum);
+        i++;
     }
 }
 fclose(Matricula);
@@ -158,6 +165,7 @@ if(Calificacione==NULL){
 else{
     while(i<num_lin_Calificaciones.lon){
         fprintf(Calificacione,"%i/%i/%i-%s-%s-%s-%f\n",cali[i].Fecha_calif.dia,cali[i].Fecha_calif.mes,cali[i].Fecha_calif.anio,cali[i].Descrip_calif,cali[i].Id_materia,cali[i].Id_alum,cali[i].Valor_calif);
+        i++;
     }
 }
 fclose(Calificacione);
@@ -211,7 +219,7 @@ int cal_linias_Matriculas(){
     return num_lin_Matriculas.lon;
 }
 
-//Cabezera: void materias_alum(char* id_alum)
+//Cabezera: void materias_alum(char* id_alum)//Falta imprimir el nombre de las asignaturas
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Devuelve las asignaturas en las que se encuentra matriculado un alumno
 void materias_alum(char* id_alum){
@@ -305,7 +313,16 @@ copiar_cad(matri[num_lin_Matriculas.lon-1].Id_alum,id_alum,6);
 //Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
 //Postcondición: Elimina la matricula de un alumno en una asignatura
 void borrar_matricula(char* id_alum, char* id_materia){
-
+    int i;
+    for(i=0;i<num_lin_Matriculas.lon;i++){
+        if(comparar(matri[i].Id_alum,id_alum,6)==0){
+            if(comparar(matri[i].Id_materia,id_materia,4)==0){
+                adelantar_Matriculas(i);
+            }
+        }
+    }
+    num_lin_Matriculas.lon--;
+    matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
 }
 
 //Cabezera: void modificar_matricula(char* id_alum, char* id_materia_vieja, char* id_materia_nueva)
@@ -328,28 +345,56 @@ for(i=0;i<num_lin_Matriculas.lon;i++){
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Cuando se elimina una materia esta función borra de las matriculas dicha asignatura
 void eliminar_matricula_materia(char* id_materia){
-
+    int i;
+    for(i=0;i<num_lin_Matriculas.lon;i++){
+        if(comparar(matri[i].Id_materia,id_materia,4)==0){
+            adelantar_Matriculas(i);
+            num_lin_Matriculas.lon--;
+            matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
+        }
+    }
 }
 
 //Cabezera: void eliminar_matriculas_alumno(char* id_alum)
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Cuando se elimina a un alumno esta función elimina las matriculas que tenia realizadas
 void eliminar_matriculas_alumno(char* id_alum){
-
+int i;
+for(i=0;i<num_lin_Matriculas.lon;i++){
+    if(comparar(matri[i].Id_alum,id_alum,6)){
+        adelantar_Matriculas(i);
+        num_lin_Matriculas.lon--;
+        matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
+    }
+}
 }
 
 //Cabezera: void eliminar_calificaciones_materia(char* id_materia)
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Cuando se elimina una materia elimina todas la notas de dicha materia
 void eliminar_calificaciones_materia(char* id_materia){
-
+int i;
+for(i=0;i<num_lin_Calificaciones.lon;i++){
+    if(comparar(cali[i].Id_materia,id_materia,4)){
+        adelantar_Calificaciones(i);
+        num_lin_Calificaciones.lon--;
+        cali = (Calificaciones*)realloc(cali,num_lin_Calificaciones.lon * sizeof(Calificaciones));
+    }
+}
 }
 
 //Cabezera: void eliminar_calificaciones_alumnos(char* id_alum)
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
-//Postcondición: Cuando se elimina un alumno elimina todas las notass de dicho alumno
+//Postcondición: Cuando se elimina un alumno elimina todas las notas de dicho alumno
 void eliminar_calificaciones_alumnos(char* id_alum){
-
+    int i;
+    for(i=0;i<num_lin_Calificaciones.lon;i++){
+        if(comparar(cali[i].Id_alum,id_alum,6)==0){
+            adelantar_Calificaciones(i);
+            num_lin_Calificaciones.lon--;
+            cali = (Calificaciones*)realloc(cali,num_lin_Calificaciones.lon * sizeof(Calificaciones));
+        }
+    }
 }
 
 //Cabezera: int comparar(char* nom1,char* nom2,int n)
@@ -374,4 +419,49 @@ int i;
 for(i=0;i<n;i++){
     cad1[i]=cad2[i];
 }
+}
+
+//Cabezera: void adelantar_Matriculas(int n)
+//Precondición: Tener la estructura de matriculas creada
+//Postcondición:Adelanta una posición en la estructura a todos los elementos dentro de un rango para eliminar a uno de ellos de la estructura
+void adelantar_Matriculas(int n){
+    int i;
+    for(i=n;i<num_lin_Matriculas.lon-1;i++){
+        copiar_cad(matri[i].Id_alum,matri[i+1].Id_alum,6);
+        copiar_cad(matri[i].Id_materia,matri[i+1].Id_materia,4);
+    }
+}
+
+//Cabezera: void adelantar_Calificaciones(int n)
+//Precondición: Tener la estructura de Calificaciones creada
+//Postcondición: Adelanta una posición en la estructura a todos los elementos dentro de un rango para eliminar a uno de ellos de la estructura
+void adelantar_Calificaciones(int n){ //Terminar
+    int i;
+    for(i=n;i<num_lin_Calificaciones.lon;i++){
+        cali[i].Fecha_calif.dia=cali[i+1].Fecha_calif.dia;
+        cali[i].Fecha_calif.mes=cali[i+1].Fecha_calif.mes;
+        cali[i].Fecha_calif.anio=cali[i].Fecha_calif.anio;
+        copiar_cad(cali[i].Descrip_calif,cali[i+1].Descrip_calif,30);
+        copiar_cad(cali[i].Id_alum,cali[i+1].Id_alum,6);
+        copiar_cad(cali[i].Id_materia,cali[i+1].Id_materia,4);
+        cali[i].Valor_calif=cali[i+1].Valor_calif;
+    }
+}
+
+//Cabezera: int longitud_cadena(char* cad)
+//Precondición: Ninguna
+//Postcondición: Devuelve el número de cacteres que tiene una cadena
+int longitud_cadena(char* cad){
+    int i=0;
+    while(cad[i]!='\0'){
+        i++;
+    }
+    return i;
+}
+
+//Cabezera: void vaciar_cadena(char* cad)
+//Precondición: Ninguna
+//Postcondición: Vacia una cadena
+void vaciar_cadena(char* cad){
+
 }
