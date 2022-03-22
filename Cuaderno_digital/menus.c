@@ -1,5 +1,5 @@
-
 #include <stdio.h>
+
 
 void inicio_sesion();
 void obtener_datos(char*,char*);
@@ -58,7 +58,7 @@ void obtener_datos(char* nom,char* con){
     fgets(con,10,stdin);
 }
 
-//Cabezera: int comparar_nom(char* nom1,char* nom2)
+//Cabezera: int comparar_nom(char* nom1,char* nom2,int n)
 //Precondición: Tener los valores de las dos cadenas no vacios
 //Postcondición: Comparar si las dos cadenas son iguales
 int comparar_cad(char* nom1,char* nom2,int n){

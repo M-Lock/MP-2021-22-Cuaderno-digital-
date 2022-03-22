@@ -1,9 +1,10 @@
 #ifndef CALIFICACIONES_MATRICULAS_H_
 #define CALIFICACIONES_MATRICULAS_H_
 typedef struct{
-    int Id_materia;
-    int Id_alum;
+    char Id_materia[6];
+    char Id_alum[8];
 }Matriculas;    //Estructura encargada de almacenar los datos correspondientes del fichero de Matrículas.txt
+Matriculas* matri;
 
 typedef struct{
     int dia;
@@ -13,11 +14,22 @@ typedef struct{
 
 typedef struct{
     Fecha Fecha_calif;
-    char Descrip_calif[31];
-    int Id_materia;
-    int Id_aalum;
+    char Descrip_calif[32];
+    char Id_materia[6];
+    char Id_alum[8];
     float Valor_calif;
 }Calificaciones;    //Estructura encargada de almacenar los datos correspondientes del fichero de Calificaciones.txt
+Calificaciones* cali;
+
+typedef struct{
+    int lon;
+}longitud_Matriculas;
+longitud_Matriculas num_lin_Matriculas;
+
+typedef struct{
+    int lon;
+}longitud_Calificaciones;
+longitud_Calificaciones num_lin_Calificaciones;
 
 void introducir_Matriculas();
 void introducir_Calificaciones();
