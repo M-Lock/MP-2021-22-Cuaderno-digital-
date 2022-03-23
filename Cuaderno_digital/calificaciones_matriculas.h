@@ -4,7 +4,7 @@ typedef struct{
     char Id_materia[6];
     char Id_alum[8];
 }Matriculas;    //Estructura encargada de almacenar los datos correspondientes del fichero de Matrículas.txt
-Matriculas* matri;
+Matriculas *matri;
 
 typedef struct{
     int dia;
@@ -19,7 +19,7 @@ typedef struct{
     char Id_alum[8];
     float Valor_calif;
 }Calificaciones;    //Estructura encargada de almacenar los datos correspondientes del fichero de Calificaciones.txt
-Calificaciones* cali;
+Calificaciones *cali;
 
 typedef struct{
     int lon;
@@ -31,21 +31,21 @@ typedef struct{
 }longitud_Calificaciones;
 longitud_Calificaciones num_lin_Calificaciones;
 
-void introducir_Matriculas();
-void introducir_Calificaciones();
-void volcar_Matriculas();
-void volcar_Calificaciones();
-void materias_alum(char*);
-void imprimir_nota(char*, char*);
-void modificar_nota(char*, char*);
-void eliminar_nota(char*, char*);
-void anadir_nota(char*, char*);
-void anadir_matricula(char*, char*);
-void borrar_matricula(char*, char*);
-void modificar_matricula(char*, char*, char*);
-void eliminar_matricula_materia(char*);
-void eliminar_matriculas_alumno(char*);
-void eliminar_calificaciones_materia(char*);
-void eliminar_calificaciones_alumnos(char*);
+void introducir_Matriculas(Matriculas **,int *);
+void introducir_Calificaciones(Calificaciones **,int *);
+void volcar_Matriculas(Matriculas *);
+void volcar_Calificaciones(Calificaciones *);
+void materias_alum(Matriculas *, char*);
+void imprimir_nota(Calificaciones *, char*, char*);
+void modificar_nota(Calificaciones **, char*, char*);
+void eliminar_nota(Calificaciones **, char*, char*);
+void anadir_nota(Calificaciones **,char*, char*);
+void anadir_matricula(Matriculas **, char*, char*);
+void borrar_matricula(Matriculas **,char*, char*);
+void modificar_matricula(Matriculas **, char*, char*, char*);
+void eliminar_matricula_materia(Matriculas **, char*);
+void eliminar_matriculas_alumno(Matriculas **, char*);
+void eliminar_calificaciones_materia(Calificaciones **, char*);
+void eliminar_calificaciones_alumnos(Calificaciones **, char*);
 #endif
 //Función para eliminar matriculas a traves del id_materia

@@ -4,8 +4,9 @@
 
 int main(){
     //inicio_cuaderno();
-    //introducir_Matriculas();
+    int *n;
+    introducir_Matriculas(&matri,n);
 
-    //volcar_Matriculas();
+    volcar_Calificaciones(&matri);
     return 0;
 }

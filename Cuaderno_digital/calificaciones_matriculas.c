@@ -1,140 +1,138 @@
 #include "calificaciones_matriculas.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int cal_linias_Matriculas();
 int cal_linias_Calificaiones();
 int comparar(char*,char*,int);
 void copiar_cad(char[],char[],int);
-void adelantar_Matriculas(int);
-void adelantar_Calificaciones(int);
+void adelantar_Matriculas(Matriculas **,int);
+void adelantar_Calificaciones(Calificaciones **,int);
 int longitud_cadena(char*);
-void vaciar_cadena(char*);
 
-//Cabezera: void introducir_Matriculas()
+//Cabezera: void introducir_Matriculas(Matriculas **matri, int *n)
 //Precondición: Las estructuras han de estar definidas
 //Postcondición: Introduce los datos del ficheor de matriculas en una estructura de datos
-void introducir_Matriculas(){
-    int i,j,cont;
-    char aux;
+void introducir_Matriculas(Matriculas **matri, int *n){
+    num_lin_Matriculas.lon = cal_linias_Matriculas();
     FILE *Matricula;
-    i=0;
-    j=0;
-    cont=0;
-    Matricula=fopen("Matriculas.txt","r");
-    if(Matricula==NULL){
-        printf("No se ha podido abrir el fichero de Matriculas. \n");
+    int len;
+    char linea[14];
+    char *token=NULL;
+    *matri=NULL;
+    *n=0;
+    Matricula = fopen("Matriculas.txt","r");
+    if(Matricula == NULL){
+        printf("ERROR al abrir el fichero.\n");
         exit(1);
     }
-    else{
-        num_lin_Matriculas.lon = cal_linias_Matriculas();
-        matri = (Matriculas*)malloc(num_lin_Matriculas.lon * sizeof(Matriculas));
-        while(aux!=EOF){
-            aux=getc(Matricula);
-            if(cont==0 && aux!='-'){
-                matri[j].Id_materia[i]=aux;
-                i++;
+    do{
+        if(((fgets(linea,57,Matricula)) != (NULL))){
+            *matri=realloc((Matriculas *)(*matri),((*n)+1)*sizeof(Matriculas));
+            len=strlen(linea);
+            linea[len-1]='\0';
+            token=strtok(linea,"-");
+            if(token==NULL){
+                break;
             }
-            if(cont==1 && aux!='-'){
-                matri[j].Id_alum[i]=aux;
-                i++;
+            if(token!=NULL){
+                strcpy((*matri)[*n].Id_materia,token);
             }
-            if(aux=='-'){
-                i=0;
-                cont++;
+            token=strtok(NULL,"-");
+            if(token==NULL){
+                break;
             }
-            if(aux=='\n'){
-                i=0;
-                cont=0;
-                j++;
+            if(token!=NULL){
+                strcpy((*matri)[*n].Id_alum,token);
             }
+            (*n)++;
         }
-    }
-    printf("%s-%s\n",matri[0].Id_alum,matri[0].Id_materia);
-    printf("%s-%s\n",matri[1].Id_alum,matri[1].Id_materia);
+    }while(!feof(Matricula));
     fclose(Matricula);
 }
 
 
-//Cabezera: void introducir_Calificaciones()
+//Cabezera: void introducir_Calificaciones(Calificaciones **cali, int *n)
 //Precondición: Las estructuras han de estar definidas
 //Postcondición: Introduce los datos del fichero de matriculas en una estructura de datos
-void introducir_Calificaciones(){
-    int i,j,cont,cont_h;
-    char aux;
-    char nota[4],d[4],m[4],a[6];
+void introducir_Calificaciones(Calificaciones **cali,int *n){
+    num_lin_Calificaciones.lon = cal_linias_Calificaiones();
     FILE *Calificacione;
-    i=0;
-    j=0;
-    cont=0;
-    cont_h=0;
-    Calificacione=fopen("Calificaciones.txt","r");
-    if(Calificacione==NULL){
-        printf("No se ha podido abrir el fichero de Calificaciones. \n");
+    int len;
+    char linea [70];
+    char *token=NULL;
+    *cali=NULL;
+    *n=0;
+    Calificacione = fopen("Calificaciones.txt","r");
+    if(Calificacione == NULL){
+        printf("ERROR al abrir el fichero.\n");
         exit(1);
     }
-    else{
-        num_lin_Calificaciones.lon = cal_linias_Calificaiones();
-        cali = (Calificaciones*)malloc(num_lin_Calificaciones.lon * sizeof(Calificaciones));
-        while(aux!=EOF){
-            aux=getc(Calificacione);
-            if(cont==0 && aux!='-'){
-                if(cont_h==0 && aux!='/'){
-                    d[i]=aux;
-                    i++;
-                }
-                if(cont_h==1 && aux!='/'){
-                    m[i]=aux;
-                    i++;
-                }
-                if(cont_h==2 && aux!='/'){
-                    a[i]=aux;
-                    i++;
-                }
+    do{
+        if(((fgets(linea,57,Calificacione)) != (NULL))){
+            *cali=realloc((Calificaciones *)(*cali),((*n)+1)*sizeof(Calificaciones));
+            len=strlen(linea);
+            linea[len-1]='\0';
+            token=strtok(linea,"/");
+            if(token==NULL){
+                break;
             }
-            if(cont==1 && aux!='-'){
-                cali[j].Descrip_calif[i]=aux;
-                i++;
+            if(token!=NULL){
+                (*cali)[*n].Fecha_calif.dia = atoi(token);
             }
-            if(cont==2 && aux!='-'){
-                cali[j].Id_materia[i]=aux;
-                i++;
+            token=strtok(NULL,"/");
+            if(token==NULL){
+                break;
             }
-            if(cont==3 && aux!='-'){
-                cali[j].Id_alum[i]=aux;
-                i++;
+            if(token!=NULL){
+                (*cali)[*n].Fecha_calif.mes = atoi(token);
             }
-            if(cont==4 && aux!='-'){
-                nota[i]=aux;
-                i++;
+            token=strtok(NULL,"/");
+            if(token==NULL){
+                break;
             }
-            if(aux=='-'){
-                cont++;
-                i=0;
+            if(token!=NULL){
+                (*cali)[*n].Fecha_calif.anio = atoi(token);
             }
-            if(aux=='/'){
-                cont_h++;
-                i=0;
+            token=strtok(NULL,"-");
+            if(token==NULL){
+                break;
             }
-            if(aux=='\n'){
-                cali[j].Valor_calif=atoi(nota);
-                cali[j].Fecha_calif.dia=atoi(d);
-                cali[j].Fecha_calif.mes=atoi(m);
-                cali[j].Fecha_calif.anio=atoi(a);
-                i=0;
-                cont=0;
-                cont_h=0;
-                j++;
+            if(token!=NULL){
+                strcpy((*cali)[*n].Descrip_calif,token);
             }
+            token=strtok(NULL,"-");
+            if(token==NULL){
+                break;
+            }
+            if(token!=NULL){
+                strcpy((*cali)[*n].Id_materia,token);
+            }
+            token=strtok(NULL,"-");
+            if(token==NULL){
+                break;
+            }
+            if(token!=NULL){
+                strcpy((*cali)[*n].Id_alum,token);
+            }
+            token=strtok(NULL,"-");
+            if(token==NULL){
+                break;
+            }
+            if(token!=NULL){
+                (*cali)[*n].Valor_calif = atoi(token);
+            }
+            (*n)++;
         }
-    }
+    }while(!feof(Calificacione));
     fclose(Calificacione);
 }
 
-//Cabezera: void volcar_Matriculas()
+//Cabezera: void volcar_Matriculas(Matriculas *matri)
 //Precondición: Tener las estructuras creados y con los datos almacenados
 //Postcondición: Introduce los datos almacenados en las estructuras en el fichero de Matriculas
-void volcar_Matriculas(){
+void volcar_Matriculas(Matriculas *matri){
 int i=0;
 FILE* Matricula;
 Matricula=fopen("Matriculas.txt","w");
@@ -151,10 +149,10 @@ else{
 fclose(Matricula);
 }
 
-//Cabezera: void volcar_Calificaciones()
+//Cabezera: void volcar_Calificaciones(Calificaciones *cali)
 //Precondición: Tener las estructuras creados y con los datos almacenados
 //Postcondición: Introduce los datos almacenados en las estructuras en el fichero de Calificaciones
-void volcar_Calificaciones(){
+void volcar_Calificaciones(Calificaciones *cali){
 int i=0;
 FILE* Calificacione;
 Calificacione=fopen("Calificaciones.txt","w");
@@ -219,10 +217,10 @@ int cal_linias_Matriculas(){
     return num_lin_Matriculas.lon;
 }
 
-//Cabezera: void materias_alum(char* id_alum)//Falta imprimir el nombre de las asignaturas
+//Cabezera: void materias_alum(Matriculas *matri, char* id_alum)//Falta imprimir el nombre de las asignaturas
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Devuelve las asignaturas en las que se encuentra matriculado un alumno
-void materias_alum(char* id_alum){
+void materias_alum(Matriculas *matri,char* id_alum){ //sin terminar
 int i;
 for(i=0;i<num_lin_Matriculas.lon;i++){
     if(comparar(id_alum,matri[i].Id_alum,6)==0){
@@ -233,10 +231,10 @@ for(i=0;i<num_lin_Matriculas.lon;i++){
 }
 }
 
-//Cabezera:void imprimir_nota(char* id_alum, char* id_materia)
+//Cabezera:void imprimir_nota(Calificaciones *cali, char* id_alum, char* id_materia)
 //Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
 //Postcondición: Imprime por pantalla las notas de una materia en concreto de un alumnos en concreto
-void imprimir_nota(char* id_alum, char* id_materia){
+void imprimir_nota(Calificaciones *cali, char* id_alum, char* id_materia){
 int i,cont;
 cont=0;
 for(i=0;i<num_lin_Calificaciones.lon;i++){
@@ -252,149 +250,184 @@ if(i==num_lin_Calificaciones.lon && cont==1){
 }
 }
 
-//Cabezera: void modificar_nota(char* id_alum, char* id_materia)
+//Cabezera: void modificar_nota(Calificaciones **cali, char* id_alum, char* id_materia)
 //Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
 //Postcondición: Modifica las notas de una asignatura de un alumno en concreto
-void modificar_nota(char* id_alum, char* id_materia){
-int i,x;
-for(i=0;i<num_lin_Calificaciones.lon;i++){
-    if(comparar(cali[i].Id_alum,id_alum,6)==0){
-        if(comparar(cali[i].Id_materia,id_materia,4)==0){
-            printf("Desea modificar la nota de: %s .\n",cali[i].Descrip_calif);
-            printf("Si desea cambiarla introduca '1' y  si no intoduzca '2'.\n");
-            scanf("%i",&x);
-            while(x!=1 || x!=2){
-                printf("Introduce un valor adecuado.\n");
-                scanf("%i",&x);
-            }
-            if(x==1){
-                printf("Introduce la nueva nota: ");
-                scanf("%f",&cali[i].Valor_calif);
+void modificar_nota(Calificaciones **cali, char* id_alum, char* id_materia){ //Comprobar
+    int i,x;
+    x=0;
+    for(i=0;i<num_lin_Calificaciones.lon;i++){
+        if(comparar((*cali)[i].Id_alum,id_alum,6)==0){
+            if(comparar((*cali)[i].Id_materia,id_materia,4)==0){
+                printf("Desea modificar la nota del examen denominado: %s", (*cali)[i].Descrip_calif);
+                do{
+                    printf("Si desea modificarla pulse '1' y si no desea eso pulse '0'.\n");
+                    scanf("%i",&x);
+                    if(x==0){
+                        printf("introduce la nueva calificacion: ");
+                        scanf("%f",&(*cali)[i].Valor_calif);
+                    }
+                }while(x!=0 || x!=1);
             }
         }
     }
 }
-}
 
-//Cabezera: void eliminar_nota(char* id_alum, char* id_materia)
+//Cabezera: void eliminar_nota(Calificaciones **cali, char* id_alum, char* id_materia)
 //Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
 //Postcondición: Elimina una nota de una asignatura de un alumno en concreto
-void eliminar_nota(char* id_alum, char* id_materia){
-
-}
-
-//Cabezera: void anadir_nota(char* id_alum, char* id_materia) //terminar
-//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
-//Postcondición: Añade una nueva nota de una asignatura a un alumno en concreto
-void anadir_nota(char* id_alum, char* id_materia){
-num_lin_Calificaciones.lon++;
-cali=(Calificaciones*)realloc(cali,num_lin_Calificaciones.lon * sizeof(Calificaciones));
-if(cali==NULL){
-    printf("No se ha podido reservar memoria. \n");
-    exit(1);
-}
-}
-
-//Cabezera: void anadir_matricula(char* id_alum, char* id_materia)
-//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
-//Postcondición: Matricula a un alumno en una determinada asignatura
-void anadir_matricula(char* id_alum, char* id_materia){
-num_lin_Matriculas.lon++;
-matri=(Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
-if(matri==NULL){
-    printf("No se ha podido reservar memoria. \n");
-    exit(1);
-}
-copiar_cad(matri[num_lin_Matriculas.lon-1].Id_materia,id_materia,4);
-copiar_cad(matri[num_lin_Matriculas.lon-1].Id_alum,id_alum,6);
-}
-
-//Cabezera: void borrar_matricula(char* id_alum, char* id_materia)
-//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
-//Postcondición: Elimina la matricula de un alumno en una asignatura
-void borrar_matricula(char* id_alum, char* id_materia){
-    int i;
-    for(i=0;i<num_lin_Matriculas.lon;i++){
-        if(comparar(matri[i].Id_alum,id_alum,6)==0){
-            if(comparar(matri[i].Id_materia,id_materia,4)==0){
-                adelantar_Matriculas(i);
+void eliminar_nota(Calificaciones **cali, char* id_alum, char* id_materia){ //Comprobar
+    int i,x;
+    x=0;
+    for(i=0;i<num_lin_Calificaciones.lon;i++){
+        if(comparar((*cali)[i].Id_alum,id_alum,6)==0){
+            if(comparar((*cali)[i].Id_materia,id_materia,4)==0){
+                printf("Desea eliminar la nota del examen denominado: %s", (*cali)[i].Descrip_calif);
+                do{
+                    printf("Si desea eliminarla pulse '1' y si no desea eso pulse '0'.\n");
+                    scanf("%i",&x);
+                    if(x==0){
+                        adelantar_Calificaciones(cali,i);
+                        num_lin_Calificaciones.lon--;
+                        *cali = realloc((Calificaciones *)(*cali),(num_lin_Calificaciones.lon) * sizeof(Calificaciones));
+                    }
+                }while(x!=0 || x!=1);
             }
         }
     }
-    num_lin_Matriculas.lon--;
-    matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
 }
 
-//Cabezera: void modificar_matricula(char* id_alum, char* id_materia_vieja, char* id_materia_nueva)
+//Cabezera: void anadir_nota(Calificaciones **cali, char* id_alum, char* id_materia) //terminar
 //Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
-//Postcondición: Modifica la matricula de un alumno
-void modificar_matricula(char id_alum[8], char id_materia_vieja[6], char id_materia_nueva[6]){
-int i;
-for(i=0;i<num_lin_Matriculas.lon;i++){
-    if(comparar(matri[i].Id_alum,id_alum,6)==0){
-        if(comparar(matri[i].Id_materia,id_materia_vieja,4)==0){
-            copiar_cad(matri[i].Id_materia,id_materia_nueva,6);
-            printf("Se ha realizado el cambio de matrícula correctamente. \n");
-            i=num_lin_Matriculas.lon;
-        }
-    }
-}
+//Postcondición: Añade una nueva nota de una asignatura a un alumno en concreto
+void anadir_nota(Calificaciones **cali, char* id_alum, char* id_materia){ //Comprobar y terminar
+    int x,y;
+    y=0;
+    num_lin_Calificaciones.lon++;
+    *cali = realloc((Calificaciones *)(*cali),(num_lin_Calificaciones.lon) * sizeof(Calificaciones));
+    do{
+        printf("Introduce la descripcion del examen (Max 30 caracteres): ");
+        fgets((*cali)[num_lin_Calificaciones.lon].Descrip_calif,32,stdin);
+        printf("\n");
+        x=longitud_cadena((*cali)[num_lin_Calificaciones.lon].Descrip_calif);
+    }while(x>32);
+    do{
+        printf("Introduce el dia: ");
+        scanf("%i",&(*cali)[num_lin_Calificaciones.lon].Fecha_calif.dia);
+        printf("\n");
+        printf("Introduce el mes: ");
+        scanf("%i",&(*cali)[num_lin_Calificaciones.lon].Fecha_calif.mes);
+        printf("\n");
+        printf("Introduce el anio: ");
+        scanf("%i",&(*cali)[num_lin_Calificaciones.lon].Fecha_calif.anio);
+        printf("\n");
+        //funcion para comprobar la fecha de poo;
+    }while(y==0);
+    do{
+        printf("Introduce una calificación:");
+        scanf("%f",&(*cali)[num_lin_Calificaciones.lon].Valor_calif);
+        printf("\n");
+    }while(0<=((*cali)[num_lin_Calificaciones.lon].Valor_calif) && ((*cali)[num_lin_Calificaciones.lon].Valor_calif)<=10);
+    printf("La nota se ha introducido correctamente. \n");
 }
 
-//Cabezera: void eliminar_matricula_materia(char* id_materia)
-//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
-//Postcondición: Cuando se elimina una materia esta función borra de las matriculas dicha asignatura
-void eliminar_matricula_materia(char* id_materia){
+//Cabezera: void anadir_matricula(Matriculas **matri, char* id_alum, char* id_materia)
+//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
+//Postcondición: Matricula a un alumno en una determinada asignatura
+void anadir_matricula(Matriculas **matri,char* id_alum, char* id_materia){ //Comprobar
+    num_lin_Matriculas.lon++;
+    *matri = realloc((Matriculas *)(*matri),(num_lin_Matriculas.lon) * sizeof(Matriculas));
+    strcpy((*matri)[num_lin_Matriculas.lon].Id_alum,id_alum);
+    strcpy((*matri)[num_lin_Matriculas.lon].Id_materia,id_materia);
+    printf("Se ha introducido la nueva matricula. \n");
+}
+
+//Cabezera: void borrar_matricula(Matriculas **matri, char* id_alum, char* id_materia)
+//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
+//Postcondición: Elimina la matricula de un alumno en una asignatura
+void borrar_matricula(Matriculas **matri, char* id_alum, char* id_materia){ //comprobar
     int i;
     for(i=0;i<num_lin_Matriculas.lon;i++){
-        if(comparar(matri[i].Id_materia,id_materia,4)==0){
-            adelantar_Matriculas(i);
+        if((comparar((*matri)[i].Id_alum,id_alum,6)==0) && (comparar((*matri)[i].Id_materia,id_materia,4)==0)){
+            adelantar_Matriculas(matri,i);
             num_lin_Matriculas.lon--;
-            matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
+            (*matri) = realloc((Matriculas *)(*matri),num_lin_Matriculas.lon * sizeof(Matriculas));
         }
     }
+    printf("Se ha eliminado la matricula correctamente. \n");
 }
 
-//Cabezera: void eliminar_matriculas_alumno(char* id_alum)
+//Cabezera: void modificar_matricula(Matricula **matri, char* id_alum, char* id_materia_vieja, char* id_materia_nueva)
+//Precondición: Tener los valores pasados a la función con algún valor válido y no vacio
+//Postcondición: Modifica la matricula de un alumno
+void modificar_matricula(Matriculas **matri, char id_alum[8], char id_materia_vieja[6], char id_materia_nueva[6]){ //Comprobar
+    int i;
+    for(i=0;i<num_lin_Matriculas.lon;i++){
+        if((comparar((*matri)[i].Id_alum,id_alum,6)==0) && (comparar((*matri)[i].Id_materia,id_materia_vieja,4)==0)){
+            strcpy((*matri)[i].Id_materia,id_materia_nueva);
+        }
+    }
+    printf("Se ha cambiado la matricula exitosamente. \n");
+}
+
+//Cabezera: void eliminar_matricula_materia(Matriculas **matri, char* id_materia)
+//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
+//Postcondición: Cuando se elimina una materia esta función borra todas las matriculas de dicha asignatura
+void eliminar_matricula_materia(Matriculas **matri, char* id_materia){ //comprobar
+    int i;
+    for(i=0;i<num_lin_Matriculas.lon;i++){
+        if(comparar((*matri)[i].Id_materia,id_materia,4)==0){
+            adelantar_Matriculas(matri,i);
+            num_lin_Matriculas.lon--;
+            (*matri) = realloc((Matriculas *)(*matri),num_lin_Matriculas.lon * sizeof(Matriculas));
+        }
+    }
+    printf("Se han eliminado todas las matriculas correspondientes correctamente. \n");
+}
+
+//Cabezera: void eliminar_matriculas_alumno(Matriculas **matri, char* id_alum)
 //Precondición: Tener el valor pasado a la función con un valor válido y no vacio
 //Postcondición: Cuando se elimina a un alumno esta función elimina las matriculas que tenia realizadas
-void eliminar_matriculas_alumno(char* id_alum){
-int i;
-for(i=0;i<num_lin_Matriculas.lon;i++){
-    if(comparar(matri[i].Id_alum,id_alum,6)){
-        adelantar_Matriculas(i);
-        num_lin_Matriculas.lon--;
-        matri = (Matriculas*)realloc(matri,num_lin_Matriculas.lon * sizeof(Matriculas));
-    }
-}
-}
-
-//Cabezera: void eliminar_calificaciones_materia(char* id_materia)
-//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
-//Postcondición: Cuando se elimina una materia elimina todas la notas de dicha materia
-void eliminar_calificaciones_materia(char* id_materia){
-int i;
-for(i=0;i<num_lin_Calificaciones.lon;i++){
-    if(comparar(cali[i].Id_materia,id_materia,4)){
-        adelantar_Calificaciones(i);
-        num_lin_Calificaciones.lon--;
-        cali = (Calificaciones*)realloc(cali,num_lin_Calificaciones.lon * sizeof(Calificaciones));
-    }
-}
-}
-
-//Cabezera: void eliminar_calificaciones_alumnos(char* id_alum)
-//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
-//Postcondición: Cuando se elimina un alumno elimina todas las notas de dicho alumno
-void eliminar_calificaciones_alumnos(char* id_alum){
+void eliminar_matriculas_alumno(Matriculas **matri, char* id_alum){ //Comprobar
     int i;
-    for(i=0;i<num_lin_Calificaciones.lon;i++){
-        if(comparar(cali[i].Id_alum,id_alum,6)==0){
-            adelantar_Calificaciones(i);
-            num_lin_Calificaciones.lon--;
-            cali = (Calificaciones*)realloc(cali,num_lin_Calificaciones.lon * sizeof(Calificaciones));
+    for(i=0;i<num_lin_Matriculas.lon;i++){
+        if(comparar((*matri)[i].Id_alum,id_alum,6)==0){
+            adelantar_Matriculas(matri,i);
+            num_lin_Matriculas.lon--;
+            (*matri) = realloc((Matriculas *)(*matri),num_lin_Matriculas.lon * sizeof(Matriculas));
         }
     }
+    printf("Se han eliminado todas las matriculas correpondientes correctamente. \n");
+}
+
+//Cabezera: void eliminar_calificaciones_materia(Calificaciones **cali, char* id_materia)
+//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
+//Postcondición: Cuando se elimina una materia elimina todas la notas de dicha materia
+void eliminar_calificaciones_materia(Calificaciones **cali, char* id_materia){ //Comprobar
+    int i;
+    for(i=0;i<num_lin_Calificaciones.lon;i++){
+        if(comparar((*cali)[i].Id_materia,id_materia,4)==0){
+            adelantar_Calificaciones(cali,i);
+            num_lin_Calificaciones.lon--;
+            (*cali) = realloc((Calificaciones *)(*cali),num_lin_Calificaciones.lon * sizeof(Calificaciones));
+        }
+    }
+    printf("Se han eliminado todas las matriculas correspondientes correctamente. \n");
+}
+
+//Cabezera: void eliminar_calificaciones_alumnos(Calificaciones **cali, char* id_alum)
+//Precondición: Tener el valor pasado a la función con un valor válido y no vacio
+//Postcondición: Cuando se elimina un alumno elimina todas las notas de dicho alumno
+void eliminar_calificaciones_alumnos(Calificaciones **cali, char* id_alum){ //Comprobar
+    int i;
+    for(i=0;i<num_lin_Calificaciones.lon;i++){
+        if(comparar((*cali)[i].Id_alum,id_alum,6)==0){
+            adelantar_Calificaciones(cali,i);
+            num_lin_Calificaciones.lon--;
+            (*cali) = realloc((Calificaciones *)(*cali),num_lin_Calificaciones.lon * sizeof(Calificaciones));
+        }
+    }
+    printf("Se han eliminado todas las matriculas correpondientes correctamente. \n");
 }
 
 //Cabezera: int comparar(char* nom1,char* nom2,int n)
@@ -421,30 +454,30 @@ for(i=0;i<n;i++){
 }
 }
 
-//Cabezera: void adelantar_Matriculas(int n)
+//Cabezera: void adelantar_Matriculas(Matriculas **matri, int n)
 //Precondición: Tener la estructura de matriculas creada
 //Postcondición:Adelanta una posición en la estructura a todos los elementos dentro de un rango para eliminar a uno de ellos de la estructura
-void adelantar_Matriculas(int n){
+void adelantar_Matriculas(Matriculas **matri, int n){
     int i;
     for(i=n;i<num_lin_Matriculas.lon-1;i++){
-        copiar_cad(matri[i].Id_alum,matri[i+1].Id_alum,6);
-        copiar_cad(matri[i].Id_materia,matri[i+1].Id_materia,4);
+        strcpy((*matri)[i].Id_alum,(*matri)[i+1].Id_alum);
+        strcpy((*matri)[i].Id_alum,(*matri)[i+1].Id_alum);
     }
 }
 
-//Cabezera: void adelantar_Calificaciones(int n)
+//Cabezera: void adelantar_Calificaciones(Calificaciones **cali, int n)
 //Precondición: Tener la estructura de Calificaciones creada
 //Postcondición: Adelanta una posición en la estructura a todos los elementos dentro de un rango para eliminar a uno de ellos de la estructura
-void adelantar_Calificaciones(int n){ //Terminar
+void adelantar_Calificaciones(Calificaciones **cali, int n){
     int i;
     for(i=n;i<num_lin_Calificaciones.lon;i++){
-        cali[i].Fecha_calif.dia=cali[i+1].Fecha_calif.dia;
-        cali[i].Fecha_calif.mes=cali[i+1].Fecha_calif.mes;
-        cali[i].Fecha_calif.anio=cali[i].Fecha_calif.anio;
-        copiar_cad(cali[i].Descrip_calif,cali[i+1].Descrip_calif,30);
-        copiar_cad(cali[i].Id_alum,cali[i+1].Id_alum,6);
-        copiar_cad(cali[i].Id_materia,cali[i+1].Id_materia,4);
-        cali[i].Valor_calif=cali[i+1].Valor_calif;
+        (*cali)[i].Fecha_calif.dia=(*cali)[i+1].Fecha_calif.dia;
+        (*cali)[i].Fecha_calif.mes=(*cali)[i+1].Fecha_calif.mes;
+        (*cali)[i].Fecha_calif.anio=(*cali)[i].Fecha_calif.anio;
+        strcpy((*cali)[i].Descrip_calif,(*cali)[i+1].Descrip_calif);
+        strcpy((*cali)[i].Id_alum,(*cali)[i+1].Id_alum);
+        strcpy((*cali)[i].Id_materia,(*cali)[i+1].Id_materia);
+        (*cali)[i].Valor_calif=(*cali)[i+1].Valor_calif;
     }
 }
 
@@ -457,11 +490,4 @@ int longitud_cadena(char* cad){
         i++;
     }
     return i;
-}
-
-//Cabezera: void vaciar_cadena(char* cad)
-//Precondición: Ninguna
-//Postcondición: Vacia una cadena
-void vaciar_cadena(char* cad){
-
 }
